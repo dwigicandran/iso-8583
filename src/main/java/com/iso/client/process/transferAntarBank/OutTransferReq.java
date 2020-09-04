@@ -1,10 +1,10 @@
-package com.iso.client.process.echo;
+package com.iso.client.process.transferAntarBank;
 
 import java.util.Date;
 
 import com.iso.client.configuration.Constants;
 import com.iso.client.configuration.PackagerConfig;
-import com.iso.client.model.InTransfer;
+import com.iso.client.model.OutTransfer;
 import com.iso.client.utility.CurrentId;
 
 import org.apache.camel.Exchange;
@@ -15,8 +15,11 @@ import org.jpos.iso.ISOUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+//created By Dwigi Candra N - Agustus 2020
+
 @Slf4j
-public class InTransferReq implements Processor{
+public class OutTransferReq implements Processor{
+
 
     private PackagerConfig config = new PackagerConfig();
     private ISOUtil isoUtil = new ISOUtil();
@@ -25,37 +28,39 @@ public class InTransferReq implements Processor{
     @Override
     public void process(Exchange exchange) throws Exception {
         // TODO Auto-generated method stub
-        InTransfer inTransfer = exchange.getMessage().getBody(InTransfer.class);
-        exchange.getIn().setBody(new String(buildISOMessage(currentId.stanGenerator(),currentId.nextJournalId(),inTransfer)));
+        OutTransfer outTransfer = exchange.getMessage().getBody(OutTransfer.class);
+        exchange.getIn().setBody(new String(buildISOMessage(currentId.stanGenerator(),currentId.nextJournalId(),outTransfer)));
 
     }
 
-    private byte[] buildISOMessage(String stan,String journalId,InTransfer inTransfer)throws Exception {
+    private byte[] buildISOMessage(String stan,String journalId,OutTransfer outTransfer)throws Exception {
         Date dateNow = new Date();
 
 
         try {
             ISOMsg isoMsg = new ISOMsg("0200"); //network mti
             isoMsg.setPackager(config.getPackagerFinancial());
-            isoMsg.set(2,inTransfer.getPan());//PAN
-            isoMsg.set(3,Constants.INQUIRY_DE3_INTERNAL_TRANSFER_PROCESS_CODE);//PROCESSING CODE SETOR
-            isoMsg.set(4,inTransfer.getAmount());//NOMINAL SETOR
+            isoMsg.set(2, outTransfer.getPan());//PAN
+            isoMsg.set(3, Constants.INQUIRY_DE3_TRANSFER_PROCESS_CODE);//PROCESSING CODE SETOR
+            isoMsg.set(4, outTransfer.getAmount());//NOMINAL SETOR
             isoMsg.set(7, Constants.DE_007_TIME_FORMATTER.format(dateNow)); //TRANSMISSION DATE AND TIME
             isoMsg.set(11, stan); //SYSTEM TRACE AUDIT NUMBER
             isoMsg.set(12, Constants.DE_012_TIME_FORMATTER.format(dateNow)); //TIME, LOCAL TRANSACTION
             isoMsg.set(13, Constants.DE_013_TIME_FORMATTER.format(dateNow)); //DATE, LOCAL TRANSACTION
             isoMsg.set(37, journalId); //RETRIEVAL REVERENCE NUMBER
-            isoMsg.set(43,inTransfer.getSourceAccountName());//CARD ACCEPTOR NAME
-            isoMsg.set(48,ISOUtil.strpad(inTransfer.getDestinationAccountName(),30)  + inTransfer.getDestinationAccountNumber());
-            isoMsg.set(49,Constants.INQUIRY_DE49_CURRENCY);//CURRENCY CODE TRANSACTION RP.
-            isoMsg.set(52,inTransfer.getEncryptedPinBlock());//PIN
-            isoMsg.set(102,inTransfer.getSourceAccountNumber());//NOMOR REKENING
+            isoMsg.set(43, outTransfer.getSourceAccountName());//CARD ACCEPTOR NAME
+            isoMsg.set(48, ISOUtil.strpad(outTransfer.getDestinationAccountName(),30)  + outTransfer.getDestinationAccountNumber());
+            isoMsg.set(49, Constants.INQUIRY_DE49_CURRENCY);//CURRENCY CODE TRANSACTION RP.
+            isoMsg.set(52, outTransfer.getEncryptedPinBlock());//PIN
+            isoMsg.set(63, outTransfer.getBankCode());//CODE BANK
+            isoMsg.set(102, outTransfer.getSourceAccountNumber());//NOMOR REKENING
 
             return isoMsg.pack();
         } catch (ISOException e) {
             throw new Exception(e);
         }
     }
+
 
     
 }

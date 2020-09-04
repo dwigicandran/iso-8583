@@ -1,11 +1,12 @@
-package com.iso.client.router;
+package com.iso.client.router.internalTransfer;
 
-import com.iso.client.process.echo.InTransferReq;
-import com.iso.client.process.echo.InTransferRes;
+import com.iso.client.process.internalTransfer.InTransferReq;
+import com.iso.client.process.internalTransfer.InTransferRes;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class InTransferNetwork extends RouteBuilder{

@@ -1,22 +1,21 @@
-package com.iso.client.router;
+package com.iso.client.router.setorTunai;
 
-import com.iso.client.process.echo.OutTransferReq;
-import com.iso.client.process.echo.OutTransferRes;
+import com.iso.client.process.setorTunai.SetorTunaiReq;
+import com.iso.client.process.setorTunai.SetorTunaiRes;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OutTransferNetwork extends RouteBuilder{
+public class SetorNetworkRoute extends RouteBuilder{
 
-    OutTransferReq reqProcess = new OutTransferReq();
-    OutTransferRes resProcess = new OutTransferRes();
+    SetorTunaiReq reqProcess = new SetorTunaiReq();
+    SetorTunaiRes resProcess = new SetorTunaiRes();
 
     @Override
     public void configure() {
-
-        from("seda:OUTTRANSFER_TEST")
+        from("seda:SETOR_TEST")
                 .doTry()
                 .process(reqProcess)
                 .to("netty:tcp://{{remote.tcp.server.host}}:{{remote.tcp.server.port}}?"
@@ -24,7 +23,6 @@ public class OutTransferNetwork extends RouteBuilder{
                 .process(resProcess)
                 .removeHeaders("*")
                 .setHeader(Exchange.CONTENT_TYPE, simple("application/json"));
-
 
 
     }

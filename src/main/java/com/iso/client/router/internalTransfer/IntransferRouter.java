@@ -1,4 +1,4 @@
-package com.iso.client.router;
+package com.iso.client.router.internalTransfer;
 
 import com.iso.client.model.InTransfer;
 

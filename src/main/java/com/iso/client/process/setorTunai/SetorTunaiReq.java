@@ -1,4 +1,4 @@
-package com.iso.client.process.echo;
+package com.iso.client.process.setorTunai;
 
 import java.util.Date;
 
@@ -13,6 +13,8 @@ import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOMsg;
 
 import lombok.extern.slf4j.Slf4j;
+
+//created By Dwigi Candra N - Agustus 2020
 
 @Slf4j
 public class SetorTunaiReq implements Processor {

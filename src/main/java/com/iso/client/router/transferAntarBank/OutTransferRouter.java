@@ -1,4 +1,4 @@
-package com.iso.client.router;
+package com.iso.client.router.transferAntarBank;
 
 import com.iso.client.model.OutTransfer;
 

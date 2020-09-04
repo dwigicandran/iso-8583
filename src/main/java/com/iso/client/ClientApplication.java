@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 //created By Dwi S - Agustus 2020
+//edited By Dwigi C N - Agustus 2020
 
 @SpringBootApplication
 public class ClientApplication {

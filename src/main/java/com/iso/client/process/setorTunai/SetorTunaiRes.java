@@ -1,23 +1,25 @@
-package com.iso.client.process.echo;
+package com.iso.client.process.setorTunai;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.iso.client.configuration.PackagerConfig;
+import com.iso.client.configuration.Util;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.jpos.iso.ISOException;
-import org.jpos.iso.ISOUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-public class InTransferRes implements Processor{
+//created By Dwigi Candra N - Agustus 2020
 
+@Slf4j
+public class SetorTunaiRes implements Processor {
 
     PackagerConfig packagerConfig = new PackagerConfig();
+    Util util = new Util();
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -36,12 +38,11 @@ public class InTransferRes implements Processor{
             isoMsg.unpack(stringMsg.getBytes());
 
             if (isoMsg.getString(39).equals("00")) {
-                resultMap.put("accountName", isoMsg.getString(43));
-                resultMap.put("accountNumber", isoMsg.getString(102));
+                resultMap.put("name", isoMsg.getString(43));
+                resultMap.put("totalDebit",util.formatCurrency(isoMsg.getString(88), 0));
                 resultMap.put("message", isoMsg.getString(120));
+                resultMap.put("accountNumber", isoMsg.getString(102));
                 resultMap.put("responseCode", isoMsg.getString(39));
-                resultMap.put("destinationAccountName",ISOUtil.takeFirstN(isoMsg.getString(48), 30));
-                resultMap.put("destinationAccountNumber",ISOUtil.takeLastN(isoMsg.getString(48),10));
             } else {
                 resultMap.put("responseCode", isoMsg.getString(39));
                 resultMap.put("message", "failed ");

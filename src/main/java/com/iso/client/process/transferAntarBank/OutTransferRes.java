@@ -1,4 +1,4 @@
-package com.iso.client.process.echo;
+package com.iso.client.process.transferAntarBank;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +13,8 @@ import org.jpos.iso.ISOUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+//created By Dwigi Candra N - Agustus 2020
+
 @Slf4j
 public class OutTransferRes implements Processor{
 
@@ -21,7 +23,7 @@ public class OutTransferRes implements Processor{
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        // TODO Auto-generated method stub
+        
         String isoMessage = exchange.getIn().getBody(String.class);
         exchange.getIn().setBody(unpackFromIso(isoMessage));
 
